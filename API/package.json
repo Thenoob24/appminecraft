@@ -1,0 +1,14 @@
+{
+  "name": "api_minecraft",
+  "version": "1.0.0",
+  "description": "API pour recevoir les données minecraft",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minecraft-data": "^3.83.1"
+  }
+}
