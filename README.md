@@ -2,7 +2,7 @@
 
 ## Membres
 - DAVID Gabriel     : NockXu
-- ARNOULT Antoine   : Garniik
+- ARNOULT Antoine   : Garniik c'est moi !!!
 - GUILMIN Leny      : TarzanHR
 - BLASZYK Constant  : Thenoob24
 
