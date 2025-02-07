@@ -1,12 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { BlockController } from './Block/Block.route';
+import { ItemController } from './Item/Item.route';
 
 export const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use(BlockController);
+app.use(ItemController);
 
 app.use((req: Request, _res: Response, next : NextFunction) => {
   const timestamp = new Date().toISOString();
