@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_minecraft/widgets/search.dart';
 import 'package:app_minecraft/widgets/version.dart';
+import 'package:app_minecraft/widgets/objet.dart';
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
 
@@ -17,7 +18,7 @@ class HomePage extends ConsumerWidget {
         title: const Text(
           "Minecraft's Guide",
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+              fontFamily: 'minecraft',color: Colors.white, fontSize: 24),
         ),
         backgroundColor: Colors.green,
       ),
@@ -30,6 +31,15 @@ class HomePage extends ConsumerWidget {
                 image: AssetImage("lib/assets/img/background.png"),
                 repeat: ImageRepeat.repeat,
               ),
+            ),
+          ),
+
+          Positioned.fill(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: 10,
+              itemBuilder: (context, i) => Objet(objet: i.toString()),
+              separatorBuilder: (context, i) => const SizedBox(height: 16),
             ),
           ),
 
