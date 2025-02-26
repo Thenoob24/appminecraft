@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.app_minecraft"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
