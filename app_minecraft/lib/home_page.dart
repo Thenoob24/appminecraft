@@ -9,14 +9,20 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Minecraft's guide",
+          "Minecraft's Guide",
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Colors.green,
       ),
-      body: Container(color: Colors.red,)
-
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/assets/img/background.png"),
+            repeat: ImageRepeat.repeat
+          ),
+        ),
+      ),
     );
   }
 }
