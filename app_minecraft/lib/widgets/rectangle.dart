@@ -8,6 +8,7 @@ class Rectangle extends StatelessWidget {
     this.height,
     this.text,
     this.border,
+    this.hintText
   });
 
   final Color color;
@@ -15,6 +16,7 @@ class Rectangle extends StatelessWidget {
   final double? height;
   final double? width;
   final double? border;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,8 @@ class Rectangle extends StatelessWidget {
             fontSize: 16,
             color: Colors.black,
           ),
-          decoration: const InputDecoration(
-            hintText: "Rechercher...",
+          decoration: InputDecoration(
+            hintText: hintText ?? "",
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
