@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_minecraft/widgets/search.dart';
+import 'package:app_minecraft/widgets/version.dart';
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
 
@@ -32,6 +33,7 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
+          // Bouton de recherche
           Positioned(
             top: 16,
             left: 16,
@@ -49,9 +51,16 @@ class HomePage extends ConsumerWidget {
 
           if (isSearchVisible)
             Positioned(
-              top: 65,
-              left: 16,
+              top: 21,
+              left: 70,
               child: const Search(),
+            ),
+
+          if (isSearchVisible)
+            Positioned(
+              top: 70,
+              left: 16,
+              child: const Version(),
             ),
         ],
       ),
