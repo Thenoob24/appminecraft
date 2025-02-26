@@ -8,6 +8,7 @@ class Version extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Rectangle(
       width: MediaQuery.of(context).size.width * 0.4,
       border: 10,

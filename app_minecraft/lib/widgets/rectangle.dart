@@ -6,39 +6,38 @@ class Rectangle extends StatelessWidget {
     required this.color,
     this.width,
     this.height,
-    this.text,
     this.border,
-    this.hintText
+    this.hintText,
+    this.child,
   });
 
   final Color color;
-  final String? text;
   final double? height;
   final double? width;
   final double? border;
   final String? hintText;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: height,
+      height: height ?? 50,
       decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(border!)
+        color: color,
+        borderRadius: BorderRadius.circular(border ?? 10),
+        border: Border.all(color: Colors.black, width: 1),
       ),
-      child: Center(
-        child: TextField(
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: child ??
+          TextField(
+            style: const TextStyle(fontSize: 16, color: Colors.black),
+            decoration: InputDecoration(
+              hintText: hintText ?? "",
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: InputBorder.none,
+            ),
           ),
-          decoration: InputDecoration(
-            hintText: hintText ?? "",
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
-        ),
-      ),
     );
   }
 }
