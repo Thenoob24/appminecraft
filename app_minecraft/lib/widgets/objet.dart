@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_minecraft/widgets/image.dart';
+import 'package:app_minecraft/widgets/card.dart';
 
 class Objet extends StatelessWidget {
   const Objet({super.key, required this.objet});
@@ -8,7 +9,20 @@ class Objet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+        onTap: (){
+
+          print("cliquer");
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: ObjetCard(id: objet),
+              );
+            },
+          );
+    },
+    child: Container(
       height: 115,
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -18,23 +32,25 @@ class Objet extends StatelessWidget {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(left: 50),
+          padding: EdgeInsets.only(left: 45),
           child: Text(
             objet,
             style: TextStyle(
                 fontFamily: 'minecraft',
-                fontSize: 24), // Couleur du texte pour contraste
+                fontSize: 20), // Couleur du texte pour contraste
           ),
         ),
         const SizedBox(width: 10),
         CustomImage(nom: "acacia_door"),
+
         Text(
           "c'est une porte",
           style: TextStyle(
               fontFamily: 'minecraft',
-              fontSize: 24),
+              fontSize: 20),
         ),
       ]),
+    ),
     );
   }
 }

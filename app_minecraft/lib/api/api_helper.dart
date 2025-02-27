@@ -12,7 +12,7 @@ class ApiHelper {
   final Dio dio;
 
   void get(String version, String searchQuery) async {
-    final url = 'http://10.0.2.2:3000/$version/blocks';
+    final url = 'http:/62.72.18.63:5713/$version/blocks';
 
     try {
       final response = await dio.get(url, queryParameters: {
