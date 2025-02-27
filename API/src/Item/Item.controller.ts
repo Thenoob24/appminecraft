@@ -107,7 +107,7 @@ export const getItemsForAll = async (req: Request, res: Response) => {
         const allData : Record<string, any> = {};
 
         versions.forEach((version: string) => {
-            const data: Record<number, any> = {};
+            const data : any[] = [];
             const mineData = minecraftData(version);
 
             if (!mineData || !mineData.itemsArray) {
@@ -122,11 +122,11 @@ export const getItemsForAll = async (req: Request, res: Response) => {
                     const drops = mineData.blockLoot && mineData.blockLoot[item.name] ? mineData.blockLoot[item.name] : [];
                     const recipes = mineData.recipes && mineData.recipes[item.id] ? mineData.recipes[item.id] : [];
 
-                    data[item.id] = {
+                    data.push({
                         ...item,
                         block: { block, drops },
                         recipes
-                    };
+                    });
                 });
 
                 allData[version] = {...data};

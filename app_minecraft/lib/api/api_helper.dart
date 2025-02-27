@@ -60,20 +60,10 @@ class ApiHelper {
     "1.8",
     "1.7"
   ];
-  dynamic data;
+  Map<String, dynamic>? data;
 
-  void get() async {
-    final url = 'http:/62.72.18.63:5713/items';
-
-    try {
-      final response = await dio.get(url);
-
-      data = response.data;
-
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error fetching data: $e");
-      }
-    }
+  Future<Response> get() async {
+    final url = 'http://62.72.18.63:5713/items';
+    return dio.get(url);
   }
 }

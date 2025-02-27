@@ -1,3 +1,4 @@
+import 'package:app_minecraft/store/data_store.dart';
 import 'package:app_minecraft/store/filter_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,11 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final DataStoreState state = ref.watch(dataStoreProvider);
+    final DataStore dataStore = ref.read(dataStoreProvider.notifier);
+
+    dataStore.setData();
+
     final isSearchVisible = ref.watch(searchVisibleProvider);
 
     return Scaffold(

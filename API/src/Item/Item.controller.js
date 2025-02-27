@@ -119,7 +119,7 @@ const getItemsForAll = (req, res) => __awaiter(void 0, void 0, void 0, function*
         ];
         const allData = {};
         versions.forEach((version) => {
-            const data = {};
+            const data = [];
             const mineData = (0, minecraft_data_1.default)(version);
             if (!mineData || !mineData.itemsArray) {
                 console.warn(`⚠️ Aucune donnée trouvée pour la version ${version}`);
@@ -131,7 +131,7 @@ const getItemsForAll = (req, res) => __awaiter(void 0, void 0, void 0, function*
                     const block = mineData.blocksByName && mineData.blocksByName[item.name] ? mineData.blocksByName[item.name] : null;
                     const drops = mineData.blockLoot && mineData.blockLoot[item.name] ? mineData.blockLoot[item.name] : [];
                     const recipes = mineData.recipes && mineData.recipes[item.id] ? mineData.recipes[item.id] : [];
-                    data[item.id] = Object.assign(Object.assign({}, item), { block: { block, drops }, recipes });
+                    data.push(Object.assign(Object.assign({}, item), { block: { block, drops }, recipes }));
                 });
                 allData[version] = Object.assign({}, data);
             }
