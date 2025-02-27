@@ -9,36 +9,38 @@ class Version extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filterStore = ref.watch(filterStoreProvider); // Récupère les données du store
+    final filterStore = ref.watch(filterStoreProvider);
 
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey, width: 1),
-      ),
-      child: DropdownButton<String>(
-        isExpanded: true,
-        value: filterStore.versions.contains(filterStore.version) ? filterStore.version : null,
-
-        hint: Text(
-          "Version...",
-          style: const TextStyle(fontFamily: 'minecraft'),
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.4,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: const Color(0xFFBFBFBF),
+          border: Border.all(color: Colors.black, width: 4),
         ),
-        items: filterStore.versions.map((String version) {
-          return DropdownMenuItem(
-            value: version,
-            child: Text(version, style: const TextStyle(fontFamily: 'minecraft')),
-          );
-        }).toList(),
-        onChanged: (value) {
-          if (value != null) {
-            ref.read(filterStoreProvider.notifier).setVersion(value);
-          }
-        },
-        underline: const SizedBox(),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            isExpanded: true,
+            dropdownColor: const Color(0xFFBFBFBF),
+            value: filterStore.versions.contains(filterStore.version) ? filterStore.version : null,
+            hint: const Text(
+              "Version...",
+              style: TextStyle(fontFamily: 'minecraft', color: Colors.black),
+            ),
+            items: filterStore.versions.map((String version) {
+              return DropdownMenuItem(
+                value: version,
+                child: Text(version, style: const TextStyle(fontFamily: 'minecraft', color: Colors.black)),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                ref.read(filterStoreProvider.notifier).setVersion(value);
+              }
+            },
+          ),
+        ),
       ),
     );
   }

@@ -54,8 +54,8 @@ class HomePage extends ConsumerWidget {
       ),
 
       body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          // Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -90,28 +90,11 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
-          // Bouton de recherche (reste fixe)
-          Positioned(
-            top: 16,
-            left: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                ref.read(searchVisibleProvider.notifier).state = !isSearchVisible;
-              },
-              backgroundColor: Colors.green,
-              child: Icon(
-                isSearchVisible ? Icons.close : Icons.search,
-                color: Colors.white,
-              ),
-            ),
-          ),
-
-          // Animation de la barre de recherche
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
-            top: 21,
-            left: isSearchVisible ? 70 : -500,
+            top: 18,
+            left: isSearchVisible ? 69 : -500,
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 300),
               opacity: isSearchVisible ? 1 : 0,
@@ -119,7 +102,6 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
-          // Animation du dropdown version
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
@@ -129,6 +111,22 @@ class HomePage extends ConsumerWidget {
               duration: const Duration(milliseconds: 300),
               opacity: isSearchVisible ? 1 : 0,
               child: const Version(),
+            ),
+          ),
+
+          Positioned(
+            top: 16,
+            left: 16,
+            child: FloatingActionButton(
+              onPressed: () {
+                ref.read(searchVisibleProvider.notifier).state = !isSearchVisible;
+              },
+              backgroundColor: Colors.green,
+              elevation: 5,
+              child: Icon(
+                isSearchVisible ? Icons.close : Icons.search,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
