@@ -91,7 +91,7 @@ class HomePage extends ConsumerWidget {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
-            top: isSearchVisible ? 70 : -500,
+            top: isSearchVisible ? 73 : -500,
             left: 16,
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: 300),
