@@ -62,13 +62,11 @@ class ApiHelper {
   ];
   dynamic data;
 
-  void get(String searchQuery) async {
+  void get() async {
     final url = 'http:/62.72.18.63:5713/items';
 
     try {
-      final response = await dio.get(url, queryParameters: {
-        'search': searchQuery,
-      });
+      final response = await dio.get(url);
 
       data = response.data;
 
