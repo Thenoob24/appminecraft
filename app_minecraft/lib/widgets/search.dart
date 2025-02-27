@@ -23,7 +23,7 @@ class Search extends ConsumerWidget {
         },
         controller: TextEditingController(text: filterStore.searchQuery)
           ..selection = TextSelection.collapsed(offset: filterStore.searchQuery.length), // Placer le curseur a la fin du texte
-        style: const TextStyle(fontSize: 16, color: Colors.black),
+        style: const TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'minecraft'),
         decoration: const InputDecoration(
           hintText: "Recherche...",
           border: InputBorder.none,
