@@ -2,6 +2,8 @@ import 'package:app_minecraft/store/filter_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app_const.dart';
+
 class Version extends ConsumerWidget {
   const Version({super.key});
 
@@ -19,20 +21,24 @@ class Version extends ConsumerWidget {
       ),
       child: DropdownButton<String>(
         isExpanded: true,
-        value: null,
-        hint: Text("Version...", style: TextStyle(
-            fontFamily: 'minecraft'
-          )
+        value: filterStore.versions.contains(filterStore.version) ? filterStore.version : null,
+
+        hint: Text(
+          "Version...",
+          style: const TextStyle(fontFamily: 'minecraft'),
         ),
         items: filterStore.versions.map((String version) {
           return DropdownMenuItem(
             value: version,
-            child: Text(version, style: TextStyle(fontFamily: 'minecraft')),
+            child: Text(version, style: const TextStyle(fontFamily: 'minecraft')),
           );
         }).toList(),
         onChanged: (value) {
-          ref.read(filterStoreProvider.notifier).setVersion(value ?? "latest");
+          if (value != null) {
+            ref.read(filterStoreProvider.notifier).setVersion(value);
+          }
         },
+        underline: const SizedBox(),
       ),
     );
   }
