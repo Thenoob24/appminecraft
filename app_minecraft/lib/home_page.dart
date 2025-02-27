@@ -7,13 +7,13 @@ import 'package:app_minecraft/widgets/objet.dart';
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
 
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final isSearchVisible = ref.watch(searchVisibleProvider);
-    final filterStore = ref.watch(filterStoreProvider);
 
     return Scaffold(
       appBar: AppBar(
