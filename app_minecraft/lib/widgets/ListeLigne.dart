@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app_minecraft/widgets/image.dart';
 import 'package:app_minecraft/widgets/card.dart';
 
-class Objet extends StatelessWidget {
-  const Objet({super.key, required this.objet});
+class ListeLigne extends StatelessWidget {
+  const ListeLigne({super.key, required this.objet});
 
   final String objet;
 
@@ -11,8 +11,6 @@ class Objet extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: (){
-
-          print("cliquer");
           showDialog(
             context: context,
             builder: (BuildContext context) {
