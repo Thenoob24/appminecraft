@@ -1,16 +1,13 @@
-// Le but : centraliser les appels a l'api
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../dio/dio_provider.dart';
 
-final apiHelperProvider = Provider<ApiHelper>((ref){
+final apiHelperProvider = Provider<ApiHelper>((ref) {
   var dio = ref.watch(dioProvider);
-  return ApiHelper(dio:dio);
+  return ApiHelper(dio: dio);
 });
 
-class ApiHelper{
+class ApiHelper {
   ApiHelper({required this.dio});
   final Dio dio;
   final List<String> version = [
@@ -79,11 +76,13 @@ class ApiHelper{
     "1.21.4"
   ];
 
-  void get() async {
-    final url = 'http:// /';
+  void get(String version, String searchQuery) async {
+    final url = 'http:/62.72.18.63:5713/$version/blocks';
 
     try {
-      final response = await dio.get(url);
+      final response = await dio.get(url, queryParameters: {
+        'search': searchQuery,
+      });
       print('Response status: ${response.statusCode}');
       print('Response data: ${response.data}');
     } catch (e) {
@@ -91,4 +90,3 @@ class ApiHelper{
     }
   }
 }
-
