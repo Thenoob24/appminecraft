@@ -5,8 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_minecraft/widgets/search.dart';
 import 'package:app_minecraft/widgets/version.dart';
 import 'package:app_minecraft/widgets/ListeLigne.dart';
+import 'Package:app_minecraft/widgets/ListeGrille.dart';
+
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
+final displayModeProvider = StateProvider<bool>((ref) => true); // true = Liste, false = Grille
 
 
 class HomePage extends ConsumerWidget {
@@ -20,6 +23,7 @@ class HomePage extends ConsumerWidget {
     dataStore.setData();
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
+    final isListMode = ref.watch(displayModeProvider); // Lire l'état du mode
 
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +36,17 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isListMode ? Icons.grid_view : Icons.list, // Change l'icône selon le mode
+              color: Colors.white,
+            ),
+            onPressed: () {
+              ref.read(displayModeProvider.notifier).state = !isListMode; // Basculer le mode
+            },
+          ),
+        ],
         title: const Text(
           "Minecraft's Guide",
           style: TextStyle(
@@ -45,8 +60,8 @@ class HomePage extends ConsumerWidget {
       ),
 
       body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          // Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -57,15 +72,54 @@ class HomePage extends ConsumerWidget {
           ),
 
           Positioned.fill(
-            child: ListView.separated(
+            child: isListMode
+
+
+                ? ListView.separated(
               padding: const EdgeInsets.all(16),
-              itemCount: 10,
+              itemCount: 100,
               itemBuilder: (context, i) => ListeLigne(objet: i.toString()),
               separatorBuilder: (context, i) => const SizedBox(height: 16),
+            )
+
+
+                : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: 10000,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (context, i) => ListeGrille(objet: i.toString()),
             ),
           ),
 
-          // Bouton de recherche
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: 18,
+            left: isSearchVisible ? 69 : -500,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
+              child: const Search(),
+            ),
+          ),
+
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: isSearchVisible ? 70 : -500,
+            left: 16,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
+              child: const Version(),
+            ),
+          ),
+
           Positioned(
             top: 16,
             left: 16,
@@ -74,26 +128,13 @@ class HomePage extends ConsumerWidget {
                 ref.read(searchVisibleProvider.notifier).state = !isSearchVisible;
               },
               backgroundColor: Colors.green,
+              elevation: 5,
               child: Icon(
                 isSearchVisible ? Icons.close : Icons.search,
                 color: Colors.white,
               ),
             ),
           ),
-
-          if (isSearchVisible)
-            Positioned(
-              top: 21,
-              left: 70,
-              child: const Search(),
-            ),
-
-          if (isSearchVisible)
-            Positioned(
-              top: 70,
-              left: 16,
-              child: const Version(),
-            ),
         ],
       ),
     );

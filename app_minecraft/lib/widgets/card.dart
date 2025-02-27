@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_minecraft/widgets/image.dart';
+import 'package:app_minecraft/widgets/ItemImage.dart';
 
 class ObjetCard extends StatelessWidget {
   const ObjetCard({super.key, required this.id});
