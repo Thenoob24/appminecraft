@@ -38,8 +38,8 @@ class HomePage extends ConsumerWidget {
       ),
 
       body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          // Image de fond
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -58,7 +58,30 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
-          // Bouton de recherche (reste fixe)
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: 18,
+            left: isSearchVisible ? 69 : -500,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
+              child: const Search(),
+            ),
+          ),
+
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: isSearchVisible ? 70 : -500,
+            left: 16,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
+              child: const Version(),
+            ),
+          ),
+
           Positioned(
             top: 16,
             left: 16,
@@ -67,36 +90,11 @@ class HomePage extends ConsumerWidget {
                 ref.read(searchVisibleProvider.notifier).state = !isSearchVisible;
               },
               backgroundColor: Colors.green,
+              elevation: 5,
               child: Icon(
                 isSearchVisible ? Icons.close : Icons.search,
                 color: Colors.white,
               ),
-            ),
-          ),
-
-          // Animation de la barre de recherche
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            top: 21,
-            left: isSearchVisible ? 70 : -500,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: isSearchVisible ? 1 : 0,
-              child: const Search(),
-            ),
-          ),
-
-          // Animation du dropdown version
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            top: isSearchVisible ? 73 : -500,
-            left: 16,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: isSearchVisible ? 1 : 0,
-              child: const Version(),
             ),
           ),
         ],
