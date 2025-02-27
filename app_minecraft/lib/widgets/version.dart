@@ -1,12 +1,15 @@
+import 'package:app_minecraft/store/filter_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Version extends StatelessWidget {
+class Version extends ConsumerWidget {
   const Version({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filterStore = ref.watch(filterStoreProvider); // Récupère les données du store
 
+    return Container(
       width: MediaQuery.of(context).size.width * 0.4,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
@@ -18,12 +21,16 @@ class Version extends StatelessWidget {
         isExpanded: true,
         value: null,
         hint: const Text("Version..."),
-        items: const [
-          DropdownMenuItem(value: "1.20", child: Text("1.20")),
-          DropdownMenuItem(value: "1.19", child: Text("1.19")),
-          DropdownMenuItem(value: "1.18", child: Text("1.18")),
-        ],
-        onChanged: (value) {},
+        items: filterStore.versions.map((String version) {
+          return DropdownMenuItem(
+            value: version,
+            child: Text(version),
+          );
+        }).toList(),
+        onChanged: (value) {
+          ref.read(filterStoreProvider.notifier).setVersion(value ?? "latest");
+          print("Version sélectionnée : $value");
+        },
         underline: const SizedBox(),
       ),
     );

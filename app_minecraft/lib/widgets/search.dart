@@ -22,8 +22,7 @@ class Search extends ConsumerWidget {
           ref.read(filterStoreProvider.notifier).setSearchQuery(value);
         },
         controller: TextEditingController(text: filterStore.searchQuery)
-        // Placer le curseur a la fin du texte
-          ..selection = TextSelection.collapsed(offset: filterStore.searchQuery.length),
+          ..selection = TextSelection.collapsed(offset: filterStore.searchQuery.length), // Placer le curseur a la fin du texte
         style: const TextStyle(fontSize: 16, color: Colors.black),
         decoration: const InputDecoration(
           hintText: "Recherche...",
