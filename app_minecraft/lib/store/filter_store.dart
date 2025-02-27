@@ -35,15 +35,6 @@ class FilterStore extends StateNotifier<FilterStoreState> {
     setSearchQuery("");
     setVersion("latest");
   }
-
-  void saveFilters() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString('searchQuery', state.searchQuery);
-      prefs.setString('version', state.version);
-      api.get(state.version, state.searchQuery);
-    });
-
-  }
 }
 
 class FilterStoreState {
