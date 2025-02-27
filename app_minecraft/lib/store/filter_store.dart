@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_minecraft/app_const.dart';
 
 import '../api/api_helper.dart';
 
@@ -15,7 +16,7 @@ class FilterStore extends StateNotifier<FilterStoreState> {
   FilterStore({required this.api}) : super(FilterStoreState.init()) {
     SharedPreferences.getInstance().then((prefs) {
       var searchQuery = prefs.getString('searchQuery') ?? "";
-      var version = prefs.getString('version') ?? "latest";
+      var version = prefs.getString('version') ?? AppConst.lastestVersion;
 
       setSearchQuery(searchQuery);
       setVersion(version);

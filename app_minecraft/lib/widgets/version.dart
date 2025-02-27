@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:app_minecraft/widgets/rectangle.dart';
 import 'package:flutter/material.dart';
 
 class Version extends StatelessWidget {
@@ -8,12 +5,27 @@ class Version extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Container(
 
-    return Rectangle(
       width: MediaQuery.of(context).size.width * 0.4,
-      border: 10,
-      hintText: "Version...",
-      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
+      child: DropdownButton<String>(
+        isExpanded: true,
+        value: null,
+        hint: const Text("Version..."),
+        items: const [
+          DropdownMenuItem(value: "1.20", child: Text("1.20")),
+          DropdownMenuItem(value: "1.19", child: Text("1.19")),
+          DropdownMenuItem(value: "1.18", child: Text("1.18")),
+        ],
+        onChanged: (value) {},
+        underline: const SizedBox(),
+      ),
     );
   }
 }
