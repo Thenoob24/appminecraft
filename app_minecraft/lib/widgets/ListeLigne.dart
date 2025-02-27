@@ -30,22 +30,21 @@ class ListeLigne extends StatelessWidget {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(left: 45),
+          padding: EdgeInsets.only(left: 30),
           child: Text(
             objet,
             style: TextStyle(
                 fontFamily: 'minecraft',
-                fontSize: 20), // Couleur du texte pour contraste
+                fontSize: 16), // Couleur du texte pour contraste
           ),
         ),
-        const SizedBox(width: 10),
         CustomImage(nom: "acacia_door"),
 
         Text(
           "c'est une porte",
           style: TextStyle(
               fontFamily: 'minecraft',
-              fontSize: 20),
+              fontSize: 16),
         ),
       ]),
     ),

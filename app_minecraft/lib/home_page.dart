@@ -53,7 +53,7 @@ class HomePage extends ConsumerWidget {
           Positioned.fill(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
-              itemCount: 10,
+              itemCount: 10000,
               itemBuilder: (context, i) => ListeLigne(objet: i.toString()),
               separatorBuilder: (context, i) => const SizedBox(height: 16),
             ),

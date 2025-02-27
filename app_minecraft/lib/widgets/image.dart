@@ -7,7 +7,7 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset("lib/images/items/$nom.png",width: 75,
-      height: 75,fit:BoxFit.fill );
+    return Image.asset("lib/images/items/$nom.png",width: 70,
+      height: 70,fit:BoxFit.fill );
   }
 }
