@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_minecraft/widgets/search.dart';
 import 'package:app_minecraft/widgets/version.dart';
 import 'package:app_minecraft/widgets/ListeLigne.dart';
+import 'Package:app_minecraft/widgets/ListeGrille.dart';
+
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
-
+final displayModeProvider = StateProvider<bool>((ref) => true); // true = Liste, false = Grille
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -14,6 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final isSearchVisible = ref.watch(searchVisibleProvider);
+    final isListMode = ref.watch(displayModeProvider); // Lire l'état du mode
 
     return Scaffold(
       appBar: AppBar(
@@ -26,6 +29,17 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isListMode ? Icons.grid_view : Icons.list, // Change l'icône selon le mode
+              color: Colors.white,
+            ),
+            onPressed: () {
+              ref.read(displayModeProvider.notifier).state = !isListMode; // Basculer le mode
+            },
+          ),
+        ],
         title: const Text(
           "Minecraft's Guide",
           style: TextStyle(
@@ -51,11 +65,23 @@ class HomePage extends ConsumerWidget {
           ),
 
           Positioned.fill(
-            child: ListView.separated(
+            child: isListMode
+                ? ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: 100,
+              itemBuilder: (context, i) => ListeLigne(objet: i.toString(),isListMode:isListMode),
+              separatorBuilder: (context, i) => const SizedBox(height: 16),
+            )
+                : GridView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: 10000,
-              itemBuilder: (context, i) => ListeLigne(objet: i.toString()),
-              separatorBuilder: (context, i) => const SizedBox(height: 16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // Nombre de colonnes
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (context, i) => ListeGrille(objet: i.toString(),isListMode:isListMode ),
             ),
           ),
 
