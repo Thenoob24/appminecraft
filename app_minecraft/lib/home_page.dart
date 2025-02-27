@@ -8,7 +8,10 @@ import 'Package:app_minecraft/widgets/ListeGrille.dart';
 
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
+<<<<<<< HEAD
 final displayModeProvider = StateProvider<bool>((ref) => true); // true = Liste, false = Grille
+=======
+>>>>>>> 787030baddab919f6b7d0f03a62a29fd595ea93d
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -85,7 +88,7 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
-          // Bouton de recherche
+          // Bouton de recherche (reste fixe)
           Positioned(
             top: 16,
             left: 16,
@@ -101,19 +104,31 @@ class HomePage extends ConsumerWidget {
             ),
           ),
 
-          if (isSearchVisible)
-            Positioned(
-              top: 21,
-              left: 70,
+          // Animation de la barre de recherche
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: 21,
+            left: isSearchVisible ? 70 : -500,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
               child: const Search(),
             ),
+          ),
 
-          if (isSearchVisible)
-            Positioned(
-              top: 70,
-              left: 16,
+          // Animation du dropdown version
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            top: isSearchVisible ? 70 : -500,
+            left: 16,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isSearchVisible ? 1 : 0,
               child: const Version(),
             ),
+          ),
         ],
       ),
     );
