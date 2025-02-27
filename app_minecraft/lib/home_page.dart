@@ -8,10 +8,8 @@ import 'Package:app_minecraft/widgets/ListeGrille.dart';
 
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
-<<<<<<< HEAD
 final displayModeProvider = StateProvider<bool>((ref) => true); // true = Liste, false = Grille
-=======
->>>>>>> 787030baddab919f6b7d0f03a62a29fd595ea93d
+
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -69,22 +67,26 @@ class HomePage extends ConsumerWidget {
 
           Positioned.fill(
             child: isListMode
+
+
                 ? ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: 100,
-              itemBuilder: (context, i) => ListeLigne(objet: i.toString(),isListMode:isListMode),
+              itemBuilder: (context, i) => ListeLigne(objet: i.toString()),
               separatorBuilder: (context, i) => const SizedBox(height: 16),
             )
+
+
                 : GridView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: 10000,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, // Nombre de colonnes
+                crossAxisCount: 3,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 childAspectRatio: 1,
               ),
-              itemBuilder: (context, i) => ListeGrille(objet: i.toString(),isListMode:isListMode ),
+              itemBuilder: (context, i) => ListeGrille(objet: i.toString()),
             ),
           ),
 

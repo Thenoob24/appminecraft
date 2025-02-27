@@ -3,10 +3,9 @@ import 'package:app_minecraft/widgets/ItemImage.dart';
 import 'package:app_minecraft/widgets/card.dart';
 
 class ListeLigne extends StatelessWidget {
-  const ListeLigne({super.key, required this.objet, required this.isListMode});
+  const ListeLigne({super.key, required this.objet});
 
   final String objet;
-  final bool isListMode;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class ListeLigne extends StatelessWidget {
         );
       },
       child: Container(
-        height: isListMode ? 115 : 100, // Ajuste la taille selon le mode
+        height: 115 , // Ajuste la taille selon le mode
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/img/button.png"),
@@ -38,7 +37,7 @@ class ListeLigne extends StatelessWidget {
                 style: TextStyle(fontFamily: 'minecraft', fontSize: 16), // Couleur du texte pour contraste
               ),
             ),
-            ItemImage(nom: "acacia_door", isListMode: isListMode), // Passer l'état à ItemImage
+            ItemImage(nom: "acacia_door"), // Passer l'état à ItemImage
             Text(
               "c'est une porte",
               style: TextStyle(fontFamily: 'minecraft', fontSize: 16),

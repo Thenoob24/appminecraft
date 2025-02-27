@@ -3,10 +3,10 @@ import 'package:app_minecraft/widgets/ItemImage.dart';
 import 'package:app_minecraft/widgets/card.dart';
 
 class ListeGrille extends StatelessWidget {
-  const ListeGrille({super.key, required this.objet, required this.isListMode});
+  const ListeGrille({super.key, required this.objet});
 
   final String objet;
-  final bool isListMode; // Ajoute cette propriété pour savoir quel mode est activé
+  // Ajoute cette propriété pour savoir quel mode est activé
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,13 @@ class ListeGrille extends StatelessWidget {
         );
       },
       child: Container(
-        height: isListMode ? 150 : 120, // Différentes tailles selon le mode
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("lib/assets/img/button2.png"),
             fit: BoxFit.fill,
           ),
         ),
-        child: ItemImage(nom: "acacia_door", isListMode: isListMode), // Passer l'état à ItemImage
+        child: ItemImage(nom: "acacia_door"), // Passer l'état à ItemImage
       ),
     );
   }
