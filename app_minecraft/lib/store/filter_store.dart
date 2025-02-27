@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_minecraft/app_const.dart';
-
 import '../api/api_helper.dart';
 
 final filterStoreProvider =
@@ -13,14 +12,18 @@ StateNotifierProvider<FilterStore, FilterStoreState>((ref) {
 class FilterStore extends StateNotifier<FilterStoreState> {
   final ApiHelper api;
 
-  FilterStore({required this.api}) : super(FilterStoreState.init()) {
-    SharedPreferences.getInstance().then((prefs) {
-      var searchQuery = prefs.getString('searchQuery') ?? "";
-      var version = prefs.getString('version') ?? AppConst.lastestVersion;
+  FilterStore({required this.api})
+      : super(FilterStoreState.init(versions: api.version)) {
+    loadFilters();
+  }
 
-      setSearchQuery(searchQuery);
-      setVersion(version);
-    });
+  /// Charge les filtres sauvegardés (dernière recherche et version)
+  Future<void> loadFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final searchQuery = prefs.getString('searchQuery') ?? "";
+    final version = prefs.getString('version') ?? AppConst.lastestVersion;
+
+    state = state.copyWith(searchQuery: searchQuery, version: version);
   }
 
   void setSearchQuery(String query) {
@@ -40,17 +43,19 @@ class FilterStore extends StateNotifier<FilterStoreState> {
 class FilterStoreState {
   final String searchQuery;
   final String version;
+  final List<String> versions;
 
-  FilterStoreState({this.searchQuery = "", this.version = "latest"});
+  FilterStoreState({this.searchQuery = "", this.version = "latest", required this.versions});
 
-  factory FilterStoreState.init() {
-    return FilterStoreState();
+  factory FilterStoreState.init({required List<String> versions}) {
+    return FilterStoreState(versions: versions);
   }
 
-  FilterStoreState copyWith({String? searchQuery, String? version}) {
+  FilterStoreState copyWith({String? searchQuery, String? version, List<String>? versions}) {
     return FilterStoreState(
       searchQuery: searchQuery ?? this.searchQuery,
       version: version ?? this.version,
+      versions: versions ?? this.versions,
     );
   }
 }
