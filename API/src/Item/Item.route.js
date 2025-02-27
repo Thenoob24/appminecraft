@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ItemController = void 0;
+const express_1 = require("express");
+const Item_controller_1 = require("./Item.controller");
+exports.ItemController = (0, express_1.Router)();
+exports.ItemController.get("/:version/items", Item_controller_1.getItems);
+exports.ItemController.get("/:version/items/:id", Item_controller_1.getItemsById);
+exports.ItemController.get("/:version/items/ByName/:name", Item_controller_1.getItemsByName);
+exports.ItemController.get("/items", Item_controller_1.getItemsForAll);
