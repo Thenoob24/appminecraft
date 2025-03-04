@@ -64,6 +64,8 @@ class ApiHelper {
 
   Future<Response> get() async {
     final url = 'http://62.72.18.63:5713/items';
-    return dio.get(url);
+    final response = await dio.get(url);
+    data = response.data;
+    return response;
   }
 }
