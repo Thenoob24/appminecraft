@@ -1,5 +1,6 @@
 import 'package:app_minecraft/store/data_store.dart';
 import 'package:app_minecraft/store/filter_store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_minecraft/widgets/search.dart';
@@ -21,6 +22,9 @@ class HomePage extends ConsumerWidget {
     final DataStore dataStore = ref.read(dataStoreProvider.notifier);
 
     dataStore.setData();
+    if (kDebugMode) {
+      print(dataStore.getData());
+    }
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
     final isListMode = ref.watch(displayModeProvider); // Lire l'état du mode
