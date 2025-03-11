@@ -7,8 +7,6 @@ class ItemImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset("lib/images/items/$nom.png",
-
-    );
+    return Image.asset("lib/images/items/$nom.png");
   }
 }

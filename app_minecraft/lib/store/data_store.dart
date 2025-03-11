@@ -13,34 +13,35 @@ class DataStore extends StateNotifier<DataStoreState> {
   DataStore({required this.api}) : super(DataStoreState.init());
 
   void setData() {
-    api.get().then((response) {
+    if (state.majs.isEmpty) {
+      api.get().then((response) {
 
-      List<Maj> majs = [];
+        Map<String, List<ItemData>> majs = {};
 
-      response.data.forEach((data) {
-        print(data);
-        majs.add(Maj.fromJson(data as Map<String, dynamic>));
+        response.data.forEach((data) {
+          majs[data['version']] = (data['data'] as List<dynamic>).map((e) => ItemData.fromJson(e as Map<String, dynamic>)).toList();
+        });
+
+        state = state.copyWith(majs: majs);
       });
-
-      state = state.copyWith(majs: majs);
-    });
+    }
   }
 
-  List<Maj> getData() {
+  Map<String, List<ItemData>> getData() {
     return state.majs;
   }
 }
 
 class DataStoreState {
-  final List<Maj> majs;
+  final Map<String, List<ItemData>> majs;
 
-  DataStoreState({this.majs = const []});
+  DataStoreState({this.majs = const {}});
 
   factory DataStoreState.init() {
     return DataStoreState();
   }
 
-  DataStoreState copyWith({required List<Maj> majs}) {
+  DataStoreState copyWith({required Map<String, List<ItemData>>? majs}) {
     return DataStoreState(
       majs: majs ?? this.majs,
     );
@@ -69,9 +70,9 @@ class ItemData {
   final String name;
   final int stackSize;
   final Block block;
+  // TODO recipe and drop
 
-  ItemData(
-      this.id, this.displayName, this.stackSize, this.block, this.name);
+  ItemData(this.id, this.displayName, this.stackSize, this.block, this.name);
 
   factory ItemData.fromJson(Map<String, dynamic> json) {
     return ItemData(
@@ -86,14 +87,24 @@ class ItemData {
 
 class Block {
   final BlockInfo blockInfo;
-  final Drops drops;
 
-  Block(this.blockInfo, this.drops);
+  Block(this.blockInfo);
 
-  factory Block.fromJson(Map<String, dynamic> json) {
+  factory Block.fromJson(Map<String, dynamic>? json) {
+    if (json != null) {
+      // Vérification si json['block'] n'est pas null avant de tenter le cast
+      final blockData = json['block'] as Map<String, dynamic>?;
+      return Block(
+        BlockInfo.fromJson(blockData ?? {}), // Si `blockData` est null, utiliser un objet vide par défaut
+      );
+    } else {
+      return Block.empty();
+    }
+  }
+
+  factory Block.empty() {
     return Block(
-      BlockInfo.fromJson(json['block']["block"]),
-      Drops.fromJson(json['drops']),
+      BlockInfo.defaultBlockInfo()
     );
   }
 }
@@ -106,8 +117,8 @@ class BlockInfo {
   final double resistance;
   final int minStateId;
   final int maxStateId;
-  final List<String> states;
-  final List<int> drops;
+  final List<dynamic> states;
+  final List<dynamic> drops;
   final bool diggable;
   final bool transparent;
   final int filterLight;
@@ -136,29 +147,28 @@ class BlockInfo {
       this.stackSize,
       this.material,
       this.harvestTools,
-      this.defaultState,
-      );
+      this.defaultState);
 
   factory BlockInfo.fromJson(Map<String, dynamic> json) {
     return BlockInfo(
-      json['id'] as int,
-      json['displayName'] as String,
-      json['name'] as String,
-      (json['hardness'] as num).toDouble(),
-      (json['resistance'] as num).toDouble(),
-      json['minStateId'] as int,
-      json['maxStateId'] as int,
-      (json['states'] as List<dynamic>).map((e) => e as String).toList(),
-      (json['drops'] as List<dynamic>).map((e) => e as int).toList(),
-      json['diggable'] as bool,
-      json['transparent'] as bool,
-      json['filterLight'] as int,
-      json['emitLight'] as int,
-      json['boundingBox'] as String,
-      json['stackSize'] as int,
-      json['material'] as String,
-      HarvestTools.fromJson(json['harvestTools']),
-      json['defaultState'] as int,
+      json['id'] as int? ?? 0,  // Si 'id' est null, on met une valeur par défaut 0
+      json['displayName'] as String? ?? "Unknown",  // Si 'displayName' est null, on met une valeur par défaut
+      json['name'] as String? ?? "unknown",  // Si 'name' est null, on met une valeur par défaut
+      (json['hardness'] as num?)?.toDouble() ?? 0.0,  // Si 'hardness' est null, on met une valeur par défaut 0.0
+      (json['resistance'] as num?)?.toDouble() ?? 0.0,  // Si 'resistance' est null, on met une valeur par défaut 0.0
+      json['minStateId'] as int? ?? 0,  // Si 'minStateId' est null, on met une valeur par défaut 0
+      json['maxStateId'] as int? ?? 0,  // Si 'maxStateId' est null, on met une valeur par défaut 0
+      json['states'] as List<dynamic>? ?? [],
+      json['drops'] as List<dynamic>? ?? [],  // Si 'drops' est null, on retourne une liste vide
+      json['diggable'] as bool? ?? false,  // Si 'diggable' est null, on met 'false' par défaut
+      json['transparent'] as bool? ?? false,  // Si 'transparent' est null, on met 'false' par défaut
+      json['filterLight'] as int? ?? 0,  // Si 'filterLight' est null, on met une valeur par défaut 0
+      json['emitLight'] as int? ?? 0,  // Si 'emitLight' est null, on met une valeur par défaut 0
+      json['boundingBox'] as String? ?? "solid",  // Si 'boundingBox' est null, on met une valeur par défaut "solid"
+      json['stackSize'] as int? ?? 64,  // Si 'stackSize' est null, on met une valeur par défaut 64
+      json['material'] as String? ?? "unknown",  // Si 'material' est null, on met une valeur par défaut "unknown"
+      HarvestTools.fromJson(json['harvestTools'] as Map<String, dynamic>?),  // Si 'harvestTools' est null, on utilise la méthode de gestion des nulls de HarvestTools
+      json['defaultState'] as int? ?? 0,  // Si 'defaultState' est null, on met une valeur par défaut 0
     );
   }
 
@@ -196,14 +206,18 @@ class HarvestTools {
 
   HarvestTools(this.e701, this.e706, this.e711, this.e716, this.e721, this.e726);
 
-  factory HarvestTools.fromJson(Map<String, dynamic> json) {
+  factory HarvestTools.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return HarvestTools.defaultHarvestTools();
+    }
+
     return HarvestTools(
-      json['701'] as bool,
-      json['706'] as bool,
-      json['711'] as bool,
-      json['716'] as bool,
-      json['721'] as bool,
-      json['726'] as bool,
+      (json['701'] as bool?) ?? false,
+      (json['706'] as bool?) ?? false,
+      (json['711'] as bool?) ?? false,
+      (json['716'] as bool?) ?? false,
+      (json['721'] as bool?) ?? false,
+      (json['726'] as bool?) ?? false,
     );
   }
 
@@ -213,22 +227,20 @@ class HarvestTools {
 }
 
 class Drops {
-  final String block;
   final List<DropsInfo> dropsInfo;
 
-  Drops(this.block, this.dropsInfo);
+  Drops(this.dropsInfo);
 
-  factory Drops.fromJson(Map<String, dynamic> json) {
+  factory Drops.fromJson(List<dynamic> json) {
     return Drops(
-      json['block'] as String,
-      (json['drops'] as List<dynamic>)
+      json
           .map((e) => DropsInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
 
   factory Drops.defaultDrops() {
-    return Drops("unknown", []);
+    return Drops([]);
   }
 }
 

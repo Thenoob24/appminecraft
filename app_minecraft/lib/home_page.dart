@@ -22,9 +22,9 @@ class HomePage extends ConsumerWidget {
     final DataStore dataStore = ref.read(dataStoreProvider.notifier);
 
     dataStore.setData();
-    if (kDebugMode) {
-      print(dataStore.getData());
-    }
+
+    print(state.majs['1.7']?[0].block.blockInfo.name);
+    
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
     final isListMode = ref.watch(displayModeProvider); // Lire l'état du mode
