@@ -82,10 +82,7 @@ class HomePage extends ConsumerWidget {
               itemCount: 100,
               itemBuilder: (context, i) => ListeLigne(objet: i.toString()),
               separatorBuilder: (context, i) => const SizedBox(height: 16),
-            )
-
-
-                : GridView.builder(
+            ): GridView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: 10000,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
