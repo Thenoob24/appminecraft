@@ -66,6 +66,7 @@ flutter:
 
   assets:
     - lib/assets/img/
+    - lib/assets/img/Harvest_Tools/
     - lib/images/items/
     - lib/images/blocks/
   fonts:
