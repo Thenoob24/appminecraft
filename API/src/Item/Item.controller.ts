@@ -104,34 +104,33 @@ export const getItemsForAll = async (req: Request, res: Response) => {
             "1.21.4"
         ];
 
-        const allData : Record<string, any> = {};
+        const allData : any[] = [];
 
-        versions.forEach((version: string) => {
-            const data: Record<number, any> = {};
-            const mineData = minecraftData(version);
+        const data : any[] = [];
+        const version : string = "1.18"
+        const mineData = minecraftData("1.18");
 
-            if (!mineData || !mineData.itemsArray) {
-                console.warn(`⚠️ Aucune donnée trouvée pour la version ${version}`);
-                return; // Ignore cette version et passe à la suivante
-            }
-            else {
-                const itemsVersion = mineData.itemsArray;
-            
-                itemsVersion.forEach((item) => {
-                    const block = mineData.blocksByName && mineData.blocksByName[item.name] ? mineData.blocksByName[item.name] : null;
-                    const drops = mineData.blockLoot && mineData.blockLoot[item.name] ? mineData.blockLoot[item.name] : [];
-                    const recipes = mineData.recipes && mineData.recipes[item.id] ? mineData.recipes[item.id] : [];
+        if (!mineData || !mineData.itemsArray) {
+            console.warn(`⚠️ Aucune donnée trouvée pour la version ${version}`);
+            return; // Ignore cette version et passe à la suivante
+        }
+        else {
+            const itemsVersion = mineData.itemsArray;
+        
+            itemsVersion.forEach((item) => {
+                const block = mineData.blocksByName && mineData.blocksByName[item.name] ? mineData.blocksByName[item.name] : null;
+                const drops = mineData.blockLoot && mineData.blockLoot[item.name] ? mineData.blockLoot[item.name] : [];
+                const recipes = mineData.recipes && mineData.recipes[item.id] ? mineData.recipes[item.id] : [];
 
-                    data[item.id] = {
-                        ...item,
-                        block: { block, drops },
-                        recipes
-                    };
+                data.push({
+                    ...item,
+                    block: { block, drops },
+                    recipes
                 });
+            });
 
-                allData[version] = {...data};
-            }
-        });
+            allData.push({"version" : version, "data" : data});
+        }
 
         res.status(200).send(allData);
 
