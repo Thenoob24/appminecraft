@@ -77,8 +77,6 @@ class HomePage extends ConsumerWidget {
 
           Positioned.fill(
             child: isListMode
-
-
                 ? ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: 100,
