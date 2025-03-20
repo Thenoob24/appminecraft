@@ -64,27 +64,57 @@ class Maj {
   }
 }
 
+class Recipe {
+  final List<dynamic> ingredients;
+  final Map<String, dynamic> result;
+
+  Recipe(this.ingredients, this.result);
+
+  factory Recipe.fromJson(Map<String, dynamic> json) {
+    var ingredientsList = json['ingredients'] as List<dynamic>?;
+    return Recipe(
+      ingredientsList ?? [],
+      json['result'] as Map<String, dynamic>? ?? {},
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'ingredients': ingredients,
+      'result': result,
+    };
+  }
+}
+
 class ItemData {
   final int id;
   final String displayName;
   final String name;
   final int stackSize;
   final Block block;
-  // TODO recipe and drop
+  final List<Recipe> recipes;
 
-  ItemData(this.id, this.displayName, this.stackSize, this.block, this.name);
+  ItemData(this.id, this.displayName, this.stackSize, this.block, this.name, this.recipes);
 
   factory ItemData.fromJson(Map<String, dynamic> json) {
+    var recipesJson = json['recipes'] as List<dynamic>?;
+    var recipes = recipesJson?.map((recipeJson) {
+      if (recipeJson is Map<String, dynamic>) {
+        return Recipe.fromJson(recipeJson);
+      }
+      return Recipe([], {}); // Recette vide par défaut
+    }).toList() ?? [];
+
     return ItemData(
       json['id'] as int,
       json['displayName'] as String,
       json['stackSize'] as int,
       Block.fromJson(json['block']),
       json['name'] as String,
+      recipes,
     );
   }
 
-  // Ajoutez cette méthode pour convertir ItemData en Map<String, dynamic>
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -92,6 +122,7 @@ class ItemData {
       'name': name,
       'stackSize': stackSize,
       'block': block.toMap(),
+      'recipes': recipes.map((recipe) => recipe.toMap()).toList(),
     };
   }
 }
