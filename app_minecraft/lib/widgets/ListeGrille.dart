@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:app_minecraft/widgets/ItemImage.dart';
-import 'package:app_minecraft/widgets/card.dart';
 
 class ListeGrille extends StatelessWidget {
-  const ListeGrille({super.key, required this.objet});
+  final Map<String, dynamic> objet;
 
-  final String objet;
-  // Ajoute cette propriété pour savoir quel mode est activé
+  const ListeGrille({super.key, required this.objet});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: ObjetCard(id: objet),
-            );
-          },
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("lib/assets/img/button2.png"),
-            fit: BoxFit.fill,
+    final name = objet['name'] ?? 'Unknown';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: ItemImage(nom: name),
           ),
-        ),
-        child: ItemImage(nom: "acacia_door"), // Passer l'état à ItemImage
+          const SizedBox(height: 8),
+          Text(
+            name,
+            style: const TextStyle(fontFamily: 'minecraft', fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

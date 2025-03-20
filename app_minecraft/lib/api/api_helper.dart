@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../dio/dio_provider.dart';
+import '../db/database_helper.dart';
 
 final apiHelperProvider = Provider<ApiHelper>((ref) {
   var dio = ref.watch(dioProvider);
@@ -64,6 +65,21 @@ class ApiHelper {
 
   Future<Response> get() async {
     final url = 'http://62.72.18.63:5713/items';
-    return dio.get(url);
+    final response = await dio.get(url);
+
+    if (response.statusCode == 200) {
+      final items = response.data as List<dynamic>;
+      final dbHelper = DatabaseHelper();
+
+      for (var item in items) {
+        await dbHelper.insertItem({
+          'name': item['name'],
+          'type': item['type'],
+          'version': item['version'],
+        });
+      }
+    }
+
+    return response;
   }
 }
