@@ -3,47 +3,34 @@ import 'package:app_minecraft/widgets/ItemImage.dart';
 import 'package:app_minecraft/widgets/card.dart';
 
 class ListeLigne extends StatelessWidget {
-  const ListeLigne({super.key, required this.objet});
+  final Map<String, dynamic> objet; // Assurez-vous que le type est correct
 
-  final String objet;
+  const ListeLigne({super.key, required this.objet});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: ObjetCard(id: objet),
-            );
-          },
-        );
-      },
-      child: Container(
-        height: 115 , // Ajuste la taille selon le mode
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("lib/assets/img/button.png"),
-            fit: BoxFit.cover,
+    final name = objet['name'] ?? 'Unknown'; // Vérifiez que 'name' existe
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: ItemImage(nom: name),
           ),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: Text(
-                objet,
-                style: TextStyle(fontFamily: 'minecraft', fontSize: 16), // Couleur du texte pour contraste
-              ),
-            ),
-            ItemImage(nom: "acacia_door"), // Passer l'état à ItemImage
-            Text(
-              "c'est une porte",
-              style: TextStyle(fontFamily: 'minecraft', fontSize: 16),
-            ),
-          ],
-        ),
+          const SizedBox(width: 16),
+          Text(
+            name,
+            style: const TextStyle(fontFamily: 'minecraft', fontSize: 16),
+          ),
+        ],
       ),
     );
   }
