@@ -22,7 +22,7 @@ class HomePage extends ConsumerWidget {
     dataStore.setData();
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
-    final isListMode = ref.watch(displayModeProvider);j
+    final isListMode = ref.watch(displayModeProvider);
 
     final items = state.majs.values.expand((list) => list).toList();
 
@@ -53,7 +53,7 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ),
-        actions: [j
+        actions: [
           IconButton(
             icon: Icon(
               isListMode ? Icons.grid_view : Icons.list, // Change l'icône selon le mode
