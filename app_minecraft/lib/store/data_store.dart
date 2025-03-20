@@ -12,18 +12,17 @@ class DataStore extends StateNotifier<DataStoreState> {
 
   DataStore({required this.api}) : super(DataStoreState.init());
 
-  void setData() {
+  Future<void> setData() async {
     if (state.majs.isEmpty) {
-      api.get().then((response) {
+      final response = await api.get();
 
-        Map<String, List<ItemData>> majs = {};
+      Map<String, List<ItemData>> majs = {};
 
-        response.data.forEach((data) {
-          majs[data['version']] = (data['data'] as List<dynamic>).map((e) => ItemData.fromJson(e as Map<String, dynamic>)).toList();
-        });
-
-        state = state.copyWith(majs: majs);
+      response.data.forEach((data) {
+        majs[data['version']] = (data['data'] as List<dynamic>).map((e) => ItemData.fromJson(e as Map<String, dynamic>)).toList();
       });
+
+      state = state.copyWith(majs: majs);
     }
   }
 

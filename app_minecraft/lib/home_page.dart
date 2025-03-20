@@ -10,6 +10,7 @@ import 'package:app_minecraft/widgets/ListeGrille.dart';
 
 final searchVisibleProvider = StateProvider<bool>((ref) => false);
 final displayModeProvider = StateProvider<bool>((ref) => true); // true = Liste, false = Grille
+final isLoadingProvider = StateProvider<bool>((ref) => true);
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -18,8 +19,14 @@ class HomePage extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final DataStoreState state = ref.watch(dataStoreProvider);
     final DataStore dataStore = ref.read(dataStoreProvider.notifier);
+    final isLoading = ref.watch(isLoadingProvider);
 
-    dataStore.setData();
+    // Charger les données si elles ne sont pas déjà chargées
+    if (state.majs.isEmpty) {
+      dataStore.setData().then((_) {
+        ref.read(isLoadingProvider.notifier).state = false;
+      });
+    }
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
     final isListMode = ref.watch(displayModeProvider);
@@ -75,24 +82,50 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: mappedItems.isEmpty
-          ? Center(
-              child: Text(
-                'Aucun item disponible',
-                style: const TextStyle(fontFamily: 'minecraft', fontSize: 16),
+      body: Stack(
+        children: [
+          // Fond d'écran
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("lib/assets/img/background.png"),
+                repeat: ImageRepeat.repeat,
               ),
-            )
-          : Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("lib/assets/img/background.png"),
-                      repeat: ImageRepeat.repeat,
+            ),
+          ),
+          
+          // Contenu principal
+          if (isLoading)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Chargement des items...',
+                    style: TextStyle(
+                      fontFamily: 'minecraft',
+                      fontSize: 16,
+                      color: Colors.grey[700],
                     ),
                   ),
-                ),
+                ],
+              ),
+            )
+          else if (mappedItems.isEmpty)
+            const Center(
+              child: Text(
+                'Aucun item disponible',
+                style: TextStyle(fontFamily: 'minecraft', fontSize: 16),
+              ),
+            )
+          else
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
                 Positioned.fill(
                   child: isListMode
                       ? ListView.separated(
@@ -157,6 +190,8 @@ class HomePage extends ConsumerWidget {
                 ),
               ],
             ),
+        ],
+      ),
     );
   }
 }

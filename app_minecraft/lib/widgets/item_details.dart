@@ -2,18 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:app_minecraft/widgets/ItemImage.dart';
 import 'package:app_minecraft/store/data_store.dart';
 
-class ItemDetails extends StatelessWidget {
+class ItemDetails extends StatefulWidget {
   final Map<String, dynamic> item;
 
   const ItemDetails({super.key, required this.item});
 
   @override
+  State<ItemDetails> createState() => _ItemDetailsState();
+}
+
+class _ItemDetailsState extends State<ItemDetails> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Simuler un délai de chargement pour les données
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final name = item['name'] ?? 'Unknown';
-    final displayName = item['displayName'] ?? name;
-    final block = item['block']?['block'] as Map<String, dynamic>?;
+    final name = widget.item['name'] ?? 'Unknown';
+    final displayName = widget.item['displayName'] ?? name;
+    final block = widget.item['block']?['block'] as Map<String, dynamic>?;
     final harvestTools = block?['harvestTools'] as Map<String, dynamic>?;
-    final recipes = item['recipes'] as List<dynamic>?;
+    final recipes = widget.item['recipes'] as List<dynamic>?;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,76 +43,102 @@ class ItemDetails extends StatelessWidget {
         ),
         backgroundColor: Colors.green,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image et nom de l'item
-            Center(
+      body: _isLoading
+          ? Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: ItemImage(nom: name),
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    displayName,
-                    style: const TextStyle(
+                    'Chargement...',
+                    style: TextStyle(
                       fontFamily: 'minecraft',
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.grey[700],
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 32),
-
-            // Outils nécessaires
-            if (harvestTools != null) ...[
-              const Text(
-                'Outils nécessaires :',
-                style: TextStyle(
-                  fontFamily: 'minecraft',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 16,
-                runSpacing: 16,
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (harvestTools['701'] == true) _buildToolItem('wooden_pickaxe'),
-                  if (harvestTools['706'] == true) _buildToolItem('stone_pickaxe'),
-                  if (harvestTools['711'] == true) _buildToolItem('iron_pickaxe'),
-                  if (harvestTools['716'] == true) _buildToolItem('diamond_pickaxe'),
-                  if (harvestTools['721'] == true) _buildToolItem('netherite_pickaxe'),
-                  if (harvestTools['726'] == true) _buildToolItem('golden_pickaxe'),
+                  // Image et nom de l'item
+                  Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ItemImage(nom: name),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          displayName,
+                          style: const TextStyle(
+                            fontFamily: 'minecraft',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Outils nécessaires
+                  if (harvestTools != null) ...[
+                    const Text(
+                      'Outils nécessaires :',
+                      style: TextStyle(
+                        fontFamily: 'minecraft',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: [
+                        if (harvestTools['701'] == true)
+                          _buildToolItem('wooden_pickaxe'),
+                        if (harvestTools['706'] == true)
+                          _buildToolItem('stone_pickaxe'),
+                        if (harvestTools['711'] == true)
+                          _buildToolItem('iron_pickaxe'),
+                        if (harvestTools['716'] == true)
+                          _buildToolItem('diamond_pickaxe'),
+                        if (harvestTools['721'] == true)
+                          _buildToolItem('netherite_pickaxe'),
+                        if (harvestTools['726'] == true)
+                          _buildToolItem('golden_pickaxe'),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 32),
+
+                  // Table de craft
+                  if (recipes != null && recipes.isNotEmpty) ...[
+                    const Text(
+                      'Table de craft :',
+                      style: TextStyle(
+                        fontFamily: 'minecraft',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ...recipes.map((recipe) => _buildCraftingTable(recipe)).toList(),
+                  ],
                 ],
               ),
-            ],
-            const SizedBox(height: 32),
-
-            // Table de craft
-            if (recipes != null && recipes.isNotEmpty) ...[
-              const Text(
-                'Table de craft :',
-                style: TextStyle(
-                  fontFamily: 'minecraft',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ...recipes.map((recipe) => _buildCraftingTable(recipe)).toList(),
-            ],
-          ],
-        ),
-      ),
+            ),
     );
   }
 
