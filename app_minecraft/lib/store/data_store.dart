@@ -85,6 +85,17 @@ class ItemData {
       (json['recipes'] as List<dynamic>).map((e) => Recipe.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
+
+  // Ajoutez cette méthode pour convertir ItemData en Map<String, dynamic>
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'displayName': displayName,
+      'name': name,
+      'stackSize': stackSize,
+      'block': block.toMap(),
+    };
+  }
 }
 
 class Block {
@@ -108,6 +119,12 @@ class Block {
     return Block(
       BlockInfo.defaultBlockInfo()
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'blockInfo': blockInfo.toMap(),
+    };
   }
 }
 
@@ -196,6 +213,29 @@ class BlockInfo {
       0,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'displayName': displayName,
+      'name': name,
+      'hardness': hardness,
+      'resistance': resistance,
+      'minStateId': minStateId,
+      'maxStateId': maxStateId,
+      'states': states,
+      'drops': drops,
+      'diggable': diggable,
+      'transparent': transparent,
+      'filterLight': filterLight,
+      'emitLight': emitLight,
+      'boundingBox': boundingBox,
+      'stackSize': stackSize,
+      'material': material,
+      'harvestTools': harvestTools.toMap(),
+      'defaultState': defaultState,
+    };
+  }
 }
 
 class HarvestTools {
@@ -226,6 +266,17 @@ class HarvestTools {
   factory HarvestTools.defaultHarvestTools() {
     return HarvestTools(false, false, false, false, false, false);
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      '701': e701,
+      '706': e706,
+      '711': e711,
+      '716': e716,
+      '721': e721,
+      '726': e726,
+    };
+  }
 }
 
 class Drops {
@@ -243,6 +294,12 @@ class Drops {
 
   factory Drops.defaultDrops() {
     return Drops([]);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'dropsInfo': dropsInfo.map((e) => e.toMap()).toList(),
+    };
   }
 }
 
@@ -267,6 +324,15 @@ class DropsInfo {
 
   factory DropsInfo.defaultDropsInfo() {
     return DropsInfo("unknown", 1.0, [], false);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'item': item,
+      'dropChance': dropChance,
+      'stackSizeRange': stackSizeRange,
+      'silkTouch': silkTouch,
+    };
   }
 }
 
