@@ -70,9 +70,10 @@ class ItemData {
   final String name;
   final int stackSize;
   final Block block;
+  final List<Recipe> recipes;
   // TODO recipe and drop
 
-  ItemData(this.id, this.displayName, this.stackSize, this.block, this.name);
+  ItemData(this.id, this.displayName, this.stackSize, this.block, this.name, this.recipes);
 
   factory ItemData.fromJson(Map<String, dynamic> json) {
     return ItemData(
@@ -81,6 +82,7 @@ class ItemData {
       json['stackSize'] as int,
       Block.fromJson(json['block']),
       json['name'] as String,
+      (json['recipes'] as List<dynamic>).map((e) => Recipe.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 }
@@ -266,4 +268,34 @@ class DropsInfo {
   factory DropsInfo.defaultDropsInfo() {
     return DropsInfo("unknown", 1.0, [], false);
   }
+}
+
+class Recipe {
+  final List<List<List<int>>> inShape;
+  final int resultId;
+  final int resultMetadata;
+  final int resultCount;
+
+  factory Recipe.fromJson(Map<String, dynamic> json) {
+    if (json['recipes'] == null) {
+      return Recipe([], 0, 0, 0);
+    }
+
+    final recipe = json['recipes'][0]; // Take the first recipe
+    final inShape = recipe['inShape'] as List<dynamic>;
+    final result = recipe['result'] as Map<String, dynamic>;
+
+    return Recipe(
+      inShape.map((row) => 
+        (row as List<dynamic>).map((col) => 
+          (col as List<dynamic>).map((item) => item as int).toList()
+        ).toList()
+      ).toList(),
+      result['id'] as int,
+      result['metadata'] as int,
+      result['count'] as int,
+    );
+  }
+
+  Recipe(this.inShape, this.resultId, this.resultMetadata, this.resultCount);
 }
