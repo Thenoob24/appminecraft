@@ -20,27 +20,10 @@ class HomePage extends ConsumerWidget {
     final DataStore dataStore = ref.read(dataStoreProvider.notifier);
 
     dataStore.setData();
+    final items = state.majs;
 
     final isSearchVisible = ref.watch(searchVisibleProvider);
     final isListMode = ref.watch(displayModeProvider);
-
-    final items = state.majs.values.expand((list) => list).toList();
-
-    // Déboguez les types des objets
-    for (var item in items) {
-      print('Item: $item, Type: ${item.runtimeType}');
-    }
-
-    // Convertissez les objets en Map<String, dynamic> si nécessaire
-    final List<Map<String, dynamic>> mappedItems = items.map((item) {
-      if (item is ItemData) {
-        return item.toMap();
-      } else if (item is Map<String, dynamic>) {
-        return item;
-      } else {
-        throw Exception('Type non supporté : ${item.runtimeType}');
-      }
-    }).toList().cast<Map<String, dynamic>>();
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +58,7 @@ class HomePage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: mappedItems.isEmpty
+      body: items.isEmpty
           ? Center(
               child: Text(
                 'Aucun item disponible',
@@ -97,15 +80,15 @@ class HomePage extends ConsumerWidget {
                   child: isListMode
                       ? ListView.separated(
                           padding: const EdgeInsets.all(16),
-                          itemCount: mappedItems.length,
+                          itemCount: items.length,
                           itemBuilder: (context, i) =>
-                              ListeLigne(objet: mappedItems[i]),
+                              ListeLigne(item: items[1]['data'][i]),
                           separatorBuilder: (context, i) =>
                               const SizedBox(height: 16),
                         )
                       : GridView.builder(
                           padding: const EdgeInsets.all(16),
-                          itemCount: mappedItems.length,
+                          itemCount: items.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -114,7 +97,7 @@ class HomePage extends ConsumerWidget {
                             childAspectRatio: 1,
                           ),
                           itemBuilder: (context, i) =>
-                              ListeGrille(objet: mappedItems[i]),
+                              ListeGrille(item: items[1]['data'][i]),
                         ),
                 ),
                 AnimatedPositioned(

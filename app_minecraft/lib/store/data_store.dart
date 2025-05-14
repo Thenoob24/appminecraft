@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/api_helper.dart';
 
@@ -13,41 +14,42 @@ class DataStore extends StateNotifier<DataStoreState> {
   DataStore({required this.api}) : super(DataStoreState.init());
 
   void setData() {
+    state.copyWith(majs: []);
     if (state.majs.isEmpty) {
       api.get().then((response) {
-
+        /*
         Map<String, List<ItemData>> majs = {};
 
         response.data.forEach((data) {
           majs[data['version']] = (data['data'] as List<dynamic>).map((e) => ItemData.fromJson(e as Map<String, dynamic>)).toList();
         });
-
-        state = state.copyWith(majs: majs);
+        */
+        state = state.copyWith(majs: response.data);
       });
     }
   }
 
-  Map<String, List<ItemData>> getData() {
+  List<dynamic> getData() {
     return state.majs;
   }
 }
 
 class DataStoreState {
-  final Map<String, List<ItemData>> majs;
+  final List<dynamic> majs;
 
-  DataStoreState({this.majs = const {}});
+  DataStoreState({this.majs = const []});
 
   factory DataStoreState.init() {
     return DataStoreState();
   }
 
-  DataStoreState copyWith({required Map<String, List<ItemData>>? majs}) {
+  DataStoreState copyWith({required List<dynamic>? majs}) {
     return DataStoreState(
       majs: majs ?? this.majs,
     );
   }
 }
-
+/*
 class Maj {
   final String version;
   final List<ItemData> items;
@@ -337,31 +339,42 @@ class DropsInfo {
 }
 
 class Recipe {
-  final List<List<List<int>>> inShape;
+  final List<List<dynamic>> inShape;
   final int resultId;
   final int resultMetadata;
   final int resultCount;
 
+  Recipe(this.inShape, this.resultId, this.resultMetadata, this.resultCount);
+
   factory Recipe.fromJson(Map<String, dynamic> json) {
-    if (json['recipes'] == null) {
+    // Check if we have direct recipe data or nested recipes
+    if (json.containsKey('inShape') && json.containsKey('result')) {
+      // Direct recipe format
+      final inShape = json['inShape'] as List<dynamic>;
+      final result = json['result'] as Map<String, dynamic>;
+
+      return Recipe(
+        inShape.map((row) => (row as List<dynamic>)).toList(),
+        result['id'] as int,
+        result['metadata'] as int,
+        result['count'] as int,
+      );
+    } else if (json.containsKey('recipes') && json['recipes'] is List && (json['recipes'] as List).isNotEmpty) {
+      // Nested recipes format
+      final recipe = json['recipes'][0]; // Take the first recipe
+      final inShape = recipe['inShape'] as List<dynamic>? ?? [];
+      final result = recipe['result'] as Map<String, dynamic>;
+
+      return Recipe(
+        inShape.map((row) => (row as List<dynamic>)).toList(),
+        result['id'] as int,
+        result['metadata'] as int,
+        result['count'] as int,
+      );
+    } else {
+      // No valid recipe data
       return Recipe([], 0, 0, 0);
     }
-
-    final recipe = json['recipes'][0]; // Take the first recipe
-    final inShape = recipe['inShape'] as List<dynamic>;
-    final result = recipe['result'] as Map<String, dynamic>;
-
-    return Recipe(
-      inShape.map((row) => 
-        (row as List<dynamic>).map((col) => 
-          (col as List<dynamic>).map((item) => item as int).toList()
-        ).toList()
-      ).toList(),
-      result['id'] as int,
-      result['metadata'] as int,
-      result['count'] as int,
-    );
   }
-
-  Recipe(this.inShape, this.resultId, this.resultMetadata, this.resultCount);
 }
+*/
